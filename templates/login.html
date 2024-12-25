@@ -1,4 +1,3 @@
-<!-- {% extends "layout.html" %} -->
 
 {% block head %}
 <title>Login</title>
@@ -9,12 +8,11 @@
 <div class="login-container">
     <h2>Login</h2>
     <form method="POST">
-        <label for="id_petugas">ID Petugas</label>
-        <input type="text" name="id_petugas" placeholder="ID Petugas" required>
+        <label for="id_pengguna">Masukan ID</label>
+        <input type="text" name="id_pengguna" placeholder="id_pengguna" required>
         <label>Password</label>
         <input type="password" name="password" placeholder="Password" required>
         <input type="submit" value="Login">
     </form>
-    <!-- <a href="{{ url_for('register') }}">Don't have an account? Register here</a> -->
 </div>
 {% endblock %}

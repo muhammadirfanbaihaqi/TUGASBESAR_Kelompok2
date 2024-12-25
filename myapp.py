@@ -8,56 +8,32 @@ mysql = init_db(app)
 
 @app.route('/')
 def home():
-    # if 'loggedin' in session:
-    #     cur = mysql.connection.cursor()
-    #     cur.execute("SELECT * FROM users")
-    #     data = cur.fetchall()
-    #     cur.close()
-    #     return render_template('index.html', name = session['name'], users = data)
-    
-    # else:
-    #     flash('Please log in to acces this page.', 'warning')
-    #     return redirect(url_for('login'))
     return render_template('index.html')
 
-    
-@app.route('/register', methods = ['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        name = request.form['name']
-        email = request.form['email']
-        password = request.form['password']
-
-        #Hash pasword sebelum disimpan ke database
-        hashed_password = generate_password_hash(password)
-
-        cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO users (name, email, password) VALUES (%s, %s, %s)", (name, email, hashed_password))
-        mysql.connection.commit()
-        cur.close()
-
-        flash('You have succesfully registered! Please log in.', 'success')
-        return redirect(url_for('login'))
-    return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form['email']
+        id_pengguna = request.form['id_pengguna']
+        # nama_pengguna = request.form['nama_pengguna']
         password = request.form['password']
 
         cur = mysql.connection.cursor()
-        cur.execute("SELECT * FROM users WHERE email = %s", [email])
+        cur.execute("SELECT * FROM users WHERE id_pengguna = %s", [id_pengguna]) #MENGAMBIL DATA DARI DATABASE BERDASARKAN ID_PENGGUNA
         user = cur.fetchone()
         cur.close()
 
-        if user and check_password_hash(user[3], password):  # Verifikasi password
+        if user and check_password_hash(user[2], password):  # Verifikasi password
             # MEMBUAT SESSION
             session['loggedin'] = True 
             session['id'] = user[0]
             session['name'] = user[1]
             flash('Login successful!', 'success')
-            return redirect(url_for('home'))
+            # return redirect(url_for('home'))
+            if user[3] == 'owner':
+                return redirect(url_for('homeOwner'))
+            else:
+                return redirect(url_for('homePetugas'))
         else:
             flash('Invalid email or password!', 'danger')
 
