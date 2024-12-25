@@ -172,11 +172,6 @@ def add_room():
         return 'Failed to add room.', 500
 
 
-
-
-# @app.route('/managePetugas', methods=['GET', 'POST'])
-# def managePetugas():
-#     return render_template('managePetugas.html')
 @app.route('/managePetugas', methods=['GET', 'POST'])
 def managePetugas():
     if request.method == 'POST':
@@ -194,7 +189,7 @@ def managePetugas():
             conn = mysql.connection
             cur = conn.cursor()
             cur.execute(
-                "INSERT INTO msuser (id_petugas, nama_user, password_user_hashed, role) VALUES (%s, %s, %s, %s)",
+                "INSERT INTO msuser (ID_Petugas, nama_user, password_user_hashed, role) VALUES (%s, %s, %s, %s)",
                 (id_petugas, nama_user, hashed_password, role)
             )
             conn.commit()
@@ -205,7 +200,45 @@ def managePetugas():
         except Exception as e:
             flash(f'Terjadi kesalahan: {e}', 'danger')
         return redirect(url_for('managePetugas'))
-    return render_template('managePetugas.html')
+    
+    # Fetch all petugas
+    try:
+        conn = mysql.connection
+        cur = conn.cursor()
+        cur.execute("SELECT ID_Petugas, nama_user, role FROM msuser")
+        users = cur.fetchall()
+
+        # Convert to dictionary
+        users = [
+            {
+                'ID_Petugas': r[0],
+                'nama_user': r[1],
+                'role': r[2]
+            }
+            for r in users
+        ]
+
+        cur.close()
+        # conn.close()
+    except Exception as e:
+        flash(f'Terjadi kesalahan: {e}', 'danger')
+        users = []
+
+    return render_template('managePetugas.html', users=users)
+
+
+@app.route('/delete-user/<int:id>', methods=['POST'])
+def delete_user(id):
+    try:
+        conn = mysql.connection
+        cur = conn.cursor()
+        cur.execute("DELETE FROM msuser WHERE ID_Petugas = %s", (id,))
+        conn.commit()
+        cur.close()
+        conn.close()
+        return '', 200
+    except Exception as e:
+        return str(e), 500
 
 
 
@@ -229,42 +262,42 @@ def booking_list():
 
 # @app.route('/room_list', methods=['GET', 'POST'])
 # def room_list():
-#     return render_template('room_list.html')\
-@app.route('/room_list', methods=['GET'])
-def room_list():
-    # Parameters
-    per_page = 9
-    page = int(request.args.get('page', 1))
+# #     return render_template('room_list.html')\
+# @app.route('/room_list', methods=['GET'])
+# def room_list():
+#     # Parameters
+#     per_page = 9
+#     page = int(request.args.get('page', 1))
 
-    # Connect to database
-    cur = mysql.connection.cursor()
+#     # Connect to database
+#     cur = mysql.connection.cursor()
 
 
-    # Count total rooms
-    cur.execute("SELECT COUNT(*) FROM rooms")
-    total_rooms = cur.fetchone()[0]
+#     # Count total rooms
+#     cur.execute("SELECT COUNT(*) FROM rooms")
+#     total_rooms = cur.fetchone()[0]
 
-    # Calculate pagination
-    total_pages = math.ceil(total_rooms / per_page)
-    offset = (page - 1) * per_page
+#     # Calculate pagination
+#     total_pages = math.ceil(total_rooms / per_page)
+#     offset = (page - 1) * per_page
 
-    # Fetch rooms for the current page
-    cur.execute("SELECT id_kamar, foto, tipe_kamar, harga_kamar, statuskamar FROM rooms LIMIT ? OFFSET ?", (per_page, offset))
-    rooms = cur.fetchall()
-    cur.close()
+#     # Fetch rooms for the current page
+#     cur.execute("SELECT id_kamar, foto, tipe_kamar, harga_kamar, statuskamar FROM rooms LIMIT ? OFFSET ?", (per_page, offset))
+#     rooms = cur.fetchall()
+#     cur.close()
 
-    # Prepare data for template
-    room_list = [
-        {'id_kamar': r[0], 'foto': r[1], 'tipe_kamar': r[2], 'harga_kamar': r[3], 'statuskamar' : r[5]}
-        for r in rooms
-    ]
+#     # Prepare data for template
+#     room_list = [
+#         {'id_kamar': r[0], 'foto': r[1], 'tipe_kamar': r[2], 'harga_kamar': r[3], 'statuskamar' : r[5]}
+#         for r in rooms
+#     ]
 
-    return render_template(
-        'room_list.html',
-        rooms=room_list,
-        total_pages=total_pages,
-        current_page=page
-    )
+#     return render_template(
+#         'room_list.html',
+#         rooms=room_list,
+#         total_pages=total_pages,
+#         current_page=page
+#     )
 
 
 

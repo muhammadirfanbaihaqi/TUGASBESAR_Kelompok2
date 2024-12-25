@@ -95,6 +95,42 @@
     border-color: #f5c6cb;
   }
 
+  .user-list {
+    margin-top: 40px;
+  }
+
+  .user-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .user-item h3 {
+    margin: 0;
+    font-size: 1.5em;
+    color: #333;
+  }
+
+  .btn-danger {
+    padding: 10px 15px;
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+  }
+
+  .btn-danger:hover {
+    background-color: #cc0000;
+  }
+
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -141,5 +177,38 @@
     </div>
   {% endif %}
   {% endwith %}
+
+  <!-- Daftar Petugas -->
+  <div class="user-list">
+    <h2>Daftar Petugas</h2>
+    <div id="user-list">
+      {% for user in users %}
+      <div class="user-item" id="user-{{ user.ID_Petugas }}">
+        <h4>{{ user.nama_user }} ({{ user.role }})</h4>
+        <button class="btn btn-danger" onclick="deleteUser({{ user.ID_Petugas }})">Hapus</button>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
 </div>
+
+<script>
+  function deleteUser(id) {
+    fetch(`/delete-user/${id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      if (response.ok) {
+        document.getElementById(`user-${id}`).remove();
+      } else {
+        alert('Gagal menghapus petugas.');
+      }
+    })
+    .catch(error => console.error('Error:', error));
+  }
+</script>
 {% endblock %}
+
