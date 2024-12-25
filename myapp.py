@@ -72,38 +72,7 @@ def booking_listOwner():
     return render_template('booking_listOwner.html')
 
 
-# @app.route('/room_listOwner', methods=['GET', 'POST'])
-# def room_listOwner():
-#     return render_template('room_listOwner.html')
-# Route untuk menampilkan daftar kamar
-# @app.route('/room_listOwner', methods=['GET'])
-# def room_listOwner():
-#     per_page = 9
-#     page = int(request.args.get('page', 1))
 
-#     cur = mysql.connection.cursor()
-
-#     # Hitung jumlah total kamar
-#     cur.execute("SELECT COUNT(*) FROM mskamar")
-#     total_rooms = cur.fetchone()[0]
-
-#     total_pages = math.ceil(total_rooms / per_page)
-#     offset = (page - 1) * per_page
-
-#     # Ambil data kamar dengan pagination
-#     cur.execute(
-#         "SELECT Kode_Kamar, foto, Kategori, harga_kamar, statuskamar FROM mskamar LIMIT %s OFFSET %s",
-#         (per_page, offset)
-#     )
-#     rooms = cur.fetchall()
-#     cur.close()
-
-#     room_list = [
-#         {'id_kamar': r[0], 'foto': bytes.fromhex(r[1]).decode('utf-8'), 'tipe_kamar': r[2], 'harga_kamar': r[3], 'statuskamar': r[4]}
-#         for r in rooms
-#     ]
-
-#     return render_template('room_listOwner.html', rooms=room_list, total_pages=total_pages, current_page=page)
 @app.route('/room_listOwner', methods=['GET'])
 def room_listOwner():
     per_page = 9
@@ -157,47 +126,6 @@ def delete_room(id):
         print(e)
         return 'Failed to delete room.', 500
 
-# Route untuk menambahkan kamar
-# @app.route('/add-room', methods=['POST'])
-# def add_room():
-#     try:
-#         kode_kamar = request.form['kode_kamar']
-#         kategori = request.form['kategori']
-#         harga_kamar = request.form['harga_kamar']
-#         lantai_ke = request.form['lantai_ke']
-#         foto = request.files['foto']
-
-#         if foto:
-#             filename = secure_filename(foto.filename)
-#             filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-#             foto.save(filepath)
-#             # Ubah nama file ke format hex 
-#             hex_filename = filename.encode('utf-8').hex()
-
-#         conn = mysql.connection
-#         cursor = conn.cursor()
-
-#         # Tambah data ke database
-#         cursor.execute(
-#             "INSERT INTO mskamar (Kode_Kamar, Kategori, harga_kamar, foto, lantai_ke) VALUES (%s, %s, %s, %s, %s)",
-#             (kode_kamar, kategori, harga_kamar, hex_filename, lantai_ke)
-#         )
-#         conn.commit()
-
-#         cursor.execute("SELECT Kode_Kamar FROM mskamar WHERE Kode_Kamar = %s", (kode_kamar,))
-#         room_id = cursor.fetchone()[0]  # Use index to get the value from the tuple
-
-#         conn.close()
-
-#         return jsonify({
-#             'id_kamar': room_id,
-#             'kategori': kategori,
-#             'harga_kamar': harga_kamar,
-#             'foto': filename
-#         }), 201
-#     except Exception as e:
-#         print(e)
-#         return 'Failed to add room.', 500
 @app.route('/add-room', methods=['POST'])
 def add_room():
     try:

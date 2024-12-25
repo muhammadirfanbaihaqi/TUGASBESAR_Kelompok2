@@ -87,20 +87,9 @@
 {% endblock %}
 
 {% block body %}
-<!-- <div id="room-list" class="room-list">
-  {% for room in rooms %}
-  <div class="room-card" id="room-{{ room.id_kamar }}">
-    <img src="{{ url_for('static', filename=room.foto) }}" alt="Room Image">
-    <h3>{{ room.tipe_kamar }}</h3>
-    <p>Harga: Rp {{ room.harga_kamar }}</p>
-    <button onclick="deleteRoom({{ room.id_kamar }})">Hapus Kamar</button>
-  </div>
-  {% endfor %}
-</div> -->
 <div id="room-list" class="room-list">
     {% for room in rooms %}
     <div class="room-card" id="room-{{ room.id_kamar }}">
-      <!-- <img src="{{ url_for('static', filename='uploads/' ~ room.foto) }}" alt="Room Image"> -->
       <img src="{{ room.foto }}" alt="Room Image">
       <p>ID: {{ room.id_kamar }}</p>
       <h3>{{ room.tipe_kamar }}</h3>
