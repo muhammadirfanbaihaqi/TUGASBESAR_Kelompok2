@@ -5,6 +5,7 @@ import math
 import os
 from werkzeug.utils import secure_filename
 import base64
+import random
 
 
 app = Flask(__name__)
@@ -89,7 +90,7 @@ def room_listOwner():
 
     # Ambil data kamar dengan pagination
     cur.execute(
-        "SELECT Kode_Kamar, foto, Kategori, harga_kamar FROM mskamar LIMIT %s OFFSET %s",
+        "SELECT Kode_Kamar, foto, Kategori, harga_kamar, statuskamar FROM mskamar LIMIT %s OFFSET %s",
         (per_page, offset)
     )
     rooms = cur.fetchall()
@@ -100,7 +101,8 @@ def room_listOwner():
             'id_kamar': r[0],
             'foto': 'data:image/jpeg;base64,' + base64.b64encode(r[1]).decode('utf-8'),  # Konversi byte ke base64
             'tipe_kamar': r[2],
-            'harga_kamar': r[3]
+            'harga_kamar': r[3],
+            'statuskamar': r[4],
         }
         for r in rooms
     ]
@@ -172,8 +174,37 @@ def add_room():
 
 
 
+# @app.route('/managePetugas', methods=['GET', 'POST'])
+# def managePetugas():
+#     return render_template('managePetugas.html')
 @app.route('/managePetugas', methods=['GET', 'POST'])
 def managePetugas():
+    if request.method == 'POST':
+        # Get form data
+        id_petugas = random.randint(1000, 9999)
+        nama_user = request.form['nama_user']
+        password_user_hashed = request.form['password_user_hashed']
+        role = request.form['role']
+
+        # Hash the password
+        hashed_password = generate_password_hash(password_user_hashed)
+
+        # Insert new petugas into the database
+        try:
+            conn = mysql.connection
+            cur = conn.cursor()
+            cur.execute(
+                "INSERT INTO msuser (id_petugas, nama_user, password_user_hashed, role) VALUES (%s, %s, %s, %s)",
+                (id_petugas, nama_user, hashed_password, role)
+            )
+            conn.commit()
+            cur.close()
+            conn.close()
+
+            flash('Petugas baru berhasil ditambahkan!', 'success')
+        except Exception as e:
+            flash(f'Terjadi kesalahan: {e}', 'danger')
+        return redirect(url_for('managePetugas'))
     return render_template('managePetugas.html')
 
 
