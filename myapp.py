@@ -98,7 +98,7 @@ def room_listOwner():
     cur.close()
 
     room_list = [
-        {'id_kamar': r['Kode_Kamar'], 'foto': r['foto'], 'tipe_kamar': r['Kategori'], 'harga_kamar': r['harga_kamar']}
+        {'id_kamar': r[0], 'foto': r[1], 'tipe_kamar': r[2], 'harga_kamar': r[3]}
         for r in rooms
     ]
 
@@ -108,10 +108,9 @@ def room_listOwner():
 @app.route('/delete-room/<id>', methods=['POST'])
 def delete_room(id):
     try:
-
         # Koneksi ke database
         conn = mysql.connection
-        cur = mysql.connection.cursor()
+        cur = conn.cursor()
 
         # Hapus kamar berdasarkan id
         cur.execute("DELETE FROM mskamar WHERE Kode_Kamar = %s", (id,))
@@ -149,7 +148,7 @@ def add_room():
         conn.commit()
 
         cursor.execute("SELECT Kode_Kamar FROM mskamar WHERE Kode_Kamar = %s", (kode_kamar,))
-        room_id = cursor.fetchone()['Kode_Kamar']
+        room_id = cursor.fetchone()[0]  # Use index to get the value from the tuple
 
         conn.close()
 
@@ -162,6 +161,7 @@ def add_room():
     except Exception as e:
         print(e)
         return 'Failed to add room.', 500
+
 
 
 @app.route('/managePetugas', methods=['GET', 'POST'])
