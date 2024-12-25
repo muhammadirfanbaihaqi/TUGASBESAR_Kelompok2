@@ -2,8 +2,115 @@
 
 {% block head %}
 <title>Checkin</title>
+<style>
+    form {
+        max-width: 500px;
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    input, select, button {
+        width: 100%;
+        margin-bottom: 15px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    button {
+        background-color: #007BFF;
+        color: white;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    .flash-messages {
+  margin: 20px 0;
+}
+
+.alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-size: 1.1em;
+  text-align: center;
+}
+
+.alert-success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.alert-danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alert {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+</style>
 {% endblock %}
 
 {% block body %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+  <div class="flash-messages">
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+{% endwith %}
+<h2 style="text-align: center;">Check-In Pelanggan</h2>
+<form id="checkinForm" method="POST" action="/checkinOwner">
+    <label for="nik">NIK Pelanggan</label>
+    <input type="text" id="nik" name="nik" required>
 
+    <label for="lantai_ke">Lokasi Lantai (1-4)</label>
+    <select id="lantai_ke" name="lantai_ke" required>
+        <option value="1">Lantai 1</option>
+        <option value="2">Lantai 2</option>
+        <option value="3">Lantai 3</option>
+        <option value="4">Lantai 4</option>
+    </select>
+
+    <label for="kategori">Kategori Kamar</label>
+    <select id="kategori" name="kategori" required>
+        <option value="Single Bed">Single Bed</option>
+        <option value="Double Bed">Double Bed</option>
+        <option value="Standar Room">Standar Room</option>
+        <option value="Connect Room">Connect Room</option>
+    </select>
+
+    <label for="durasi">Durasi Check-In (dalam hari)</label>
+    <input type="number" id="durasi" name="durasi" min="1" required>
+
+    <button type="submit">Check-In</button>
+</form>
 {% endblock %}

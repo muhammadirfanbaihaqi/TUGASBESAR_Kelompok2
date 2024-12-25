@@ -6,6 +6,8 @@ import os
 from werkzeug.utils import secure_filename
 import base64
 import random
+from datetime import datetime
+
 
 
 app = Flask(__name__)
@@ -58,9 +60,76 @@ def homeOwner():
 
 
 
+# @app.route('/checkinOwner', methods=['GET', 'POST'])
+# def checkinOwner():
+#     return render_template('checkinOwner.html')
 @app.route('/checkinOwner', methods=['GET', 'POST'])
 def checkinOwner():
+    if request.method == 'POST':
+        nik = request.form['nik']
+        lantai_ke = request.form['lantai_ke']
+        kategori = request.form['kategori']
+        durasi = int(request.form['durasi'])
+        id_petugas = session.get('id')  # ID petugas dari session
+        print(id_petugas)
+        waktu_checkin = datetime.now()
+        id_booking = random.randint(1000, 9999)
+
+        try:
+            conn = mysql.connect
+            cursor = conn.cursor()
+            # Select kamar sesuai kriteria
+            cursor.execute(
+                """
+                SELECT * FROM mskamar 
+                WHERE lantai_ke = %s AND kategori = %s AND statuskamar = 'Tersedia'
+                LIMIT 1
+                """,
+                (lantai_ke, kategori)
+            )
+            kamar = cursor.fetchone()
+
+            if not kamar:
+                flash("Tidak ada kamar yang tersedia sesuai kriteria.", "danger")
+                return redirect(url_for('checkinOwner'))
+
+            kode_kamar = kamar[0]
+            harga_kamar = kamar[2]
+            harga_bayar_awal = durasi * harga_kamar
+
+            # Update status kamar
+            cursor.execute(
+                """
+                UPDATE mskamar 
+                SET statuskamar = 'Dibooking' 
+                WHERE Kode_Kamar = %s
+                """,
+                (kode_kamar,)
+            )
+            conn.commit()
+
+            # Insert booking data
+            cursor.execute(
+                """
+                INSERT INTO trbooking (ID_Booking, NIK, ID_Petugas, Kode_Kamar, Waktu_Checkin, Durasi_Hari, HargaBayarAwal) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                    """,
+                (id_booking, nik, id_petugas, kode_kamar, waktu_checkin, durasi, harga_bayar_awal)
+            )
+            conn.commit()
+            flash("Booking berhasil!", "success")
+
+        except Exception as e:
+            conn.rollback()
+            flash(f"Terjadi kesalahan: {str(e)}", "danger")
+        finally:
+            conn.close()
+
+        return redirect(url_for('checkinOwner'))
+
     return render_template('checkinOwner.html')
+
+
 
 
 @app.route('/checkoutOwner', methods=['GET', 'POST'])
@@ -291,6 +360,68 @@ def homePetugas():
 
 @app.route('/checkin', methods=['GET', 'POST'])
 def checkin():
+    if request.method == 'POST':
+        nik = request.form['nik']
+        lantai_ke = request.form['lantai_ke']
+        kategori = request.form['kategori']
+        durasi = int(request.form['durasi'])
+        id_petugas = session.get('id')  # ID petugas dari session
+        print(id_petugas)
+        waktu_checkin = datetime.now()
+        id_booking = random.randint(1000, 9999)
+
+        try:
+            conn = mysql.connect
+            cursor = conn.cursor()
+            # Select kamar sesuai kriteria
+            cursor.execute(
+                """
+                SELECT * FROM mskamar 
+                WHERE lantai_ke = %s AND kategori = %s AND statuskamar = 'Tersedia'
+                LIMIT 1
+                """,
+                (lantai_ke, kategori)
+            )
+            kamar = cursor.fetchone()
+
+            if not kamar:
+                flash("Tidak ada kamar yang tersedia sesuai kriteria.", "danger")
+                return redirect(url_for('checkinOwner'))
+
+            kode_kamar = kamar[0]
+            harga_kamar = kamar[2]
+            harga_bayar_awal = durasi * harga_kamar
+
+            # Update status kamar
+            cursor.execute(
+                """
+                UPDATE mskamar 
+                SET statuskamar = 'Dibooking' 
+                WHERE Kode_Kamar = %s
+                """,
+                (kode_kamar,)
+            )
+            conn.commit()
+
+            # Insert booking data
+            cursor.execute(
+                """
+                INSERT INTO trbooking (ID_Booking, NIK, ID_Petugas, Kode_Kamar, Waktu_Checkin, Durasi_Hari, HargaBayarAwal) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                    """,
+                (id_booking, nik, id_petugas, kode_kamar, waktu_checkin, durasi, harga_bayar_awal)
+            )
+            conn.commit()
+            flash("Booking berhasil!", "success")
+
+        except Exception as e:
+            conn.rollback()
+            flash(f"Terjadi kesalahan: {str(e)}", "danger")
+        finally:
+            conn.close()
+
+        return redirect(url_for('checkin'))
+
     return render_template('checkin.html')
 
 
