@@ -190,11 +190,14 @@
 .add-room-form button:hover {
     background-color: #218838;
 }
+</style>
+
 
 </style>
 {% endblock %}
 
 {% block body %}
+
 <div id="room-list" class="room-list">
     {% for room in rooms %}
     <div class="room-card" id="room-{{ room.id_kamar }}">
@@ -235,63 +238,54 @@
 </div>
 
 <script>
-    function deleteRoom(id) {
-      fetch(`/delete-room/${id}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      .then(response => {
-        if (response.ok) {
-          document.getElementById(`room-${id}`).remove();
-        } else {
-          alert('Failed to delete room.');
-        }
-      })
-      .catch(error => console.error('Error:', error));
-    }
+  function deleteRoom(id) {
+    fetch(`/delete-room/${id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      if (response.ok) {
+        document.getElementById(`room-${id}`).remove();
+      } else {
+        alert('Failed to delete room.');
+      }
+    })
+    .catch(error => console.error('Error:', error));
+  }
 
-    function toggleAddRoomForm() {
-      const form = document.getElementById('add-room-form');
-      form.style.display = form.style.display === 'none' || !form.style.display ? 'block' : 'none';
-    }
+  function toggleAddRoomForm() {
+    const form = document.getElementById('add-room-form');
+    form.style.display = form.style.display === 'none' || !form.style.display ? 'block' : 'none';
+  }
 
-    function submitAddRoom(event) {
-      event.preventDefault();
+  function submitAddRoom(event) {
+    event.preventDefault();
 
-      const form = document.getElementById('add-room');
-      const formData = new FormData(form);
+    const form = document.getElementById('add-room');
+    const formData = new FormData(form);
 
-      fetch('/add-room', {
-        method: 'POST',
-        body: formData
-      })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error('Failed to add room.');
-        }
-      })
-      .then(data => {
-        const roomList = document.getElementById('room-list');
-
-        const newRoom = document.createElement('div');
-        newRoom.classList.add('room-card');
-        newRoom.id = `room-${data.id_kamar}`;
-        newRoom.innerHTML = `
-          <img src="/static/${data.foto}" alt="Room Image">
-          <h3>${data.kategori}</h3>
-          <p>Harga: Rp ${data.harga_kamar}</p>
-          <button onclick="deleteRoom(${data.id_kamar})">Hapus Kamar</button>
-        `;
-
-        roomList.appendChild(newRoom);
-        form.reset();
-        toggleAddRoomForm();
-      })
-      .catch(error => console.error('Error:', error));
-    }
+    fetch('/add-room', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => {
+      if (response.redirected) {
+        // Jika ada redirect, pindahkan browser ke lokasi baru
+        window.location.href = response.url;
+      } else if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('Failed to add room.');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Terjadi kesalahan saat menambahkan kamar.');
+    });
+  }
 </script>
+
+
 {% endblock %}

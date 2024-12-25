@@ -128,6 +128,49 @@ def delete_room(id):
         print(e)
         return 'Failed to delete room.', 500
 
+# @app.route('/add-room', methods=['POST'])
+# def add_room():
+#     try:
+#         kode_kamar = request.form['kode_kamar']
+#         kategori = request.form['kategori']
+#         harga_kamar = request.form['harga_kamar']
+#         lantai_ke = request.form['lantai_ke']
+#         foto = request.files['foto']
+
+#         if foto:
+#             filename = secure_filename(foto.filename)
+#             filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+#             foto.save(filepath)
+
+#             # Baca file gambar sebagai byte
+#             with open(filepath, 'rb') as file:
+#                 byte_data = file.read()
+
+#         conn = mysql.connection
+#         cursor = conn.cursor()
+
+#         # Simpan data byte ke database
+#         cursor.execute(
+#             "INSERT INTO mskamar (Kode_Kamar, Kategori, harga_kamar, foto, lantai_ke) VALUES (%s, %s, %s, %s, %s)",
+#             (kode_kamar, kategori, harga_kamar, byte_data, lantai_ke)
+#         )
+#         conn.commit()
+
+#         cursor.execute("SELECT Kode_Kamar FROM mskamar WHERE Kode_Kamar = %s", (kode_kamar,))
+#         room_id = cursor.fetchone()[0]
+
+#         conn.close()
+
+#         return jsonify({
+#             'id_kamar': room_id,
+#             'kategori': kategori,
+#             'harga_kamar': harga_kamar,
+#             'foto': filename
+#         }), 201
+#     except Exception as e:
+#         print(e)
+#         return 'Failed to add room.', 500
+
 @app.route('/add-room', methods=['POST'])
 def add_room():
     try:
@@ -156,20 +199,20 @@ def add_room():
         )
         conn.commit()
 
-        cursor.execute("SELECT Kode_Kamar FROM mskamar WHERE Kode_Kamar = %s", (kode_kamar,))
-        room_id = cursor.fetchone()[0]
-
+        cursor.close()
         conn.close()
 
-        return jsonify({
-            'id_kamar': room_id,
-            'kategori': kategori,
-            'harga_kamar': harga_kamar,
-            'foto': filename
-        }), 201
+        flash('Berhasil menambahkan kamar!', 'success')
+        response = redirect(url_for('room_listOwner'))
+        response.headers['X-Success'] = 'true'  # Tambahkan header kustom
+        return response
     except Exception as e:
         print(e)
-        return 'Failed to add room.', 500
+        flash('Gagal menambahkan kamar.', 'danger')
+        response = redirect(url_for('room_listOwner'))
+        response.headers['X-Success'] = 'false'  # Tambahkan header kustom
+        return response
+
 
 
 @app.route('/managePetugas', methods=['GET', 'POST'])
