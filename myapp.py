@@ -218,13 +218,13 @@ def room_list():
     offset = (page - 1) * per_page
 
     # Fetch rooms for the current page
-    cur.execute("SELECT id_kamar, foto, tipe_kamar, harga_kamar FROM rooms LIMIT ? OFFSET ?", (per_page, offset))
+    cur.execute("SELECT id_kamar, foto, tipe_kamar, harga_kamar, statuskamar FROM rooms LIMIT ? OFFSET ?", (per_page, offset))
     rooms = cur.fetchall()
     cur.close()
 
     # Prepare data for template
     room_list = [
-        {'id_kamar': r[0], 'foto': r[1], 'tipe_kamar': r[2], 'harga_kamar': r[3]}
+        {'id_kamar': r[0], 'foto': r[1], 'tipe_kamar': r[2], 'harga_kamar': r[3], 'statuskamar' : r[5]}
         for r in rooms
     ]
 

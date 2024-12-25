@@ -83,6 +83,114 @@
     .add-room-form button:hover {
       background-color: #218838;
     }
+
+    .room-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.room-card {
+    display: flex;
+    flex-direction: column;
+    width: calc(33.33% - 20px);
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.room-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.room-card h3 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 1.5em;
+    color: #333;
+}
+
+.room-card p {
+    margin: 10px 0;
+    font-size: 1.2em;
+    color: #666;
+}
+
+.room-card button {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.room-card button:hover {
+    background-color: #cc0000;
+}
+
+.add-room {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.add-room button {
+    padding: 15px 25px;
+    font-size: 1.2em;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-room button:hover {
+    background-color: #0056b3;
+}
+
+.add-room-form {
+    display: none;
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.add-room-form input,
+.add-room-form select {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.add-room-form button {
+    padding: 15px 25px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-room-form button:hover {
+    background-color: #218838;
+}
+
 </style>
 {% endblock %}
 
@@ -93,8 +201,8 @@
       <img src="{{ room.foto }}" alt="Room Image">
       <p>ID: {{ room.id_kamar }}</p>
       <h3>{{ room.tipe_kamar }}</h3>
-      <p>Status Kamar: {{ room.statuskamar }}</p>
       <p>Harga: Rp {{ room.harga_kamar }}</p>
+      <p>Status Kamar: {{ room.statuskamar }}</p>
       <button onclick="deleteRoom({{ room.id_kamar }})">Hapus Kamar</button>
     </div>
     {% endfor %}
