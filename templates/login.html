@@ -1,4 +1,3 @@
-
 {% block head %}
 <title>Login</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='stylelogin.css') }}">
@@ -14,5 +13,18 @@
         <input type="password" name="password" placeholder="Password" required>
         <input type="submit" value="Login">
     </form>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-messages">
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% endwith %}
 </div>
 {% endblock %}

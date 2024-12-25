@@ -1,79 +1,167 @@
 {% extends "navbarPetugas.html" %}
 
 {% block head %}
-<title>Room List</title>
+<title>Hotel Asahi - Room List</title>
 <style>
-    .room-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-        margin: 20px 0;
-    }
-
     .room-card {
-        border: 1px solid #ccc;
-        border-radius: 10px;
-        padding: 15px;
-        text-align: center;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 15px;
+      margin: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
 
     .room-card img {
-        width: 100%;
-        height: 150px;
-        object-fit: cover;
-        border-radius: 5px;
+      width: 100%;
+      height: auto;
+      border-radius: 5px;
     }
 
-    .room-card h3 {
-        margin: 10px 0;
-        font-size: 18px;
+    .room-card button {
+      margin-top: 10px;
+      padding: 8px 12px;
+      background-color: #ff4d4d;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
     }
 
-    .room-card p {
-        font-size: 16px;
-        margin: 5px 0;
+    .room-card button:hover {
+      background-color: #cc0000;
     }
 
-    .pagination {
-        display: flex;
-        justify-content: center;
-        margin: 20px 0;
+    .add-room {
+      margin-top: 20px;
+      text-align: center;
     }
 
-    .pagination a {
-        margin: 0 5px;
-        padding: 8px 12px;
-        text-decoration: none;
-        color: #007BFF;
-        border: 1px solid #ddd;
-        border-radius: 5px;
+    .add-room button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
     }
 
-    .pagination a.active {
-        background-color: #007BFF;
-        color: white;
+    .add-room button:hover {
+      background-color: #0056b3;
     }
+
+    .add-room-form {
+      display: none;
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .add-room-form input,
+    .add-room-form select {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .add-room-form button {
+      padding: 10px 20px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .add-room-form button:hover {
+      background-color: #218838;
+    }
+
+    .room-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.room-card {
+    display: flex;
+    flex-direction: column;
+    width: calc(33.33% - 20px);
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.room-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.room-card h3 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 1.5em;
+    color: #333;
+}
+
+.room-card p {
+    margin: 10px 0;
+    font-size: 1.2em;
+    color: #666;
+}
+
+.room-card button {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.room-card button:hover {
+    background-color: #cc0000;
+}
+
+
+
+</style>
+
+
 </style>
 {% endblock %}
 
 {% block body %}
-<div class="container">
-    <h1 class="text-center">Daftar Kamar</h1>
-    <div class="room-grid">
-        {% for room in rooms %}
-        <div class="room-card">
-            <img src="{{ url_for('static', filename=room['foto']) }}" alt="Foto Kamar">
-            <h3>{{ room['tipe_kamar'] }}</h3>
-            <p>ID: {{ room['id_kamar'] }}</p>
-            <p>Harga: Rp {{ room['harga_kamar'] }}</p>
-        </div>
-        {% endfor %}
+
+<div id="room-list" class="room-list">
+    {% for room in rooms %}
+    <div class="room-card" id="room-{{ room.id_kamar }}">
+      <img src="{{ room.foto }}" alt="Room Image">
+      <p>ID: {{ room.id_kamar }}</p>
+      <h3>{{ room.tipe_kamar }}</h3>
+      <p>Harga: Rp {{ room.harga_kamar }}</p>
+      <p>Status Kamar: {{ room.statuskamar }}</p>
     </div>
-    <div class="pagination">
-        {% for page in range(1, total_pages + 1) %}
-        <a href="{{ url_for('room_list', page=page) }}" class="{{ 'active' if page == current_page else '' }}">{{ page }}</a>
-        {% endfor %}
-    </div>
-</div>
+    {% endfor %}
+  </div> 
+
+<script>
+// 
+</script>
+
+
 {% endblock %}

@@ -42,13 +42,12 @@ def login():
             session['id'] = user[0]
             session['name'] = user[1]
             flash('Login successful!', 'success')
-            # return redirect(url_for('home'))
             if user[3] == 'owner':
                 return redirect(url_for('homeOwner'))
-            else:
+            elif user[3] == 'Petugas':
                 return redirect(url_for('homePetugas'))
         else:
-            flash('Invalid email or password!', 'danger')
+            flash('Invalid id or password!', 'danger')
 
     return render_template('login.html')
 
@@ -434,44 +433,41 @@ def booking_list():
     return render_template('booking_list.html')
 
 
-# @app.route('/room_list', methods=['GET', 'POST'])
-# def room_list():
-# #     return render_template('room_list.html')\
-# @app.route('/room_list', methods=['GET'])
-# def room_list():
-#     # Parameters
-#     per_page = 9
-#     page = int(request.args.get('page', 1))
 
-#     # Connect to database
-#     cur = mysql.connection.cursor()
+@app.route('/room_list', methods=['GET'])
+def room_list():
+    per_page = 9
+    page = int(request.args.get('page', 1))
 
+    cur = mysql.connection.cursor()
 
-#     # Count total rooms
-#     cur.execute("SELECT COUNT(*) FROM rooms")
-#     total_rooms = cur.fetchone()[0]
+    # Hitung jumlah total kamar
+    cur.execute("SELECT COUNT(*) FROM mskamar")
+    total_rooms = cur.fetchone()[0]
 
-#     # Calculate pagination
-#     total_pages = math.ceil(total_rooms / per_page)
-#     offset = (page - 1) * per_page
+    total_pages = math.ceil(total_rooms / per_page)
+    offset = (page - 1) * per_page
 
-#     # Fetch rooms for the current page
-#     cur.execute("SELECT id_kamar, foto, tipe_kamar, harga_kamar, statuskamar FROM rooms LIMIT ? OFFSET ?", (per_page, offset))
-#     rooms = cur.fetchall()
-#     cur.close()
+    # Ambil data kamar dengan pagination
+    cur.execute(
+        "SELECT Kode_Kamar, foto, Kategori, harga_kamar, statuskamar FROM mskamar LIMIT %s OFFSET %s",
+        (per_page, offset)
+    )
+    rooms = cur.fetchall()
+    cur.close()
 
-#     # Prepare data for template
-#     room_list = [
-#         {'id_kamar': r[0], 'foto': r[1], 'tipe_kamar': r[2], 'harga_kamar': r[3], 'statuskamar' : r[5]}
-#         for r in rooms
-#     ]
+    room_list = [
+        {
+            'id_kamar': r[0],
+            'foto': 'data:image/jpeg;base64,' + base64.b64encode(r[1]).decode('utf-8'),  # Konversi byte ke base64
+            'tipe_kamar': r[2],
+            'harga_kamar': r[3],
+            'statuskamar': r[4],
+        }
+        for r in rooms
+    ]
 
-#     return render_template(
-#         'room_list.html',
-#         rooms=room_list,
-#         total_pages=total_pages,
-#         current_page=page
-#     )
+    return render_template('room_list.html', rooms=room_list, total_pages=total_pages, current_page=page)
 
 
 

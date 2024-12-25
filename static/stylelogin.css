@@ -37,7 +37,7 @@ body {
     border: none;
     border-radius: 5px;
     background: rgba(255, 255, 255, 0.1);
-    color: #fff;
+    color: black;
 }
 
 .login-container input[type="submit"] {
@@ -59,7 +59,109 @@ body {
     margin-top: 1rem;
     text-decoration: none;
     transition: color 0.3s;
-}
+}body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+  }
+  
+  .login-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2em;
+    color: #007bff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  label {
+    margin-bottom: 5px;
+    font-size: 1.1em;
+  }
+  
+  input[type="text"], input[type="password"] {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    transition: border-color 0.3s ease-in-out;
+  }
+  
+  input[type="text"]:focus, input[type="password"]:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  input[type="submit"] {
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  input[type="submit"]:hover {
+    background-color: #0056b3;
+  }
+  
+  .flash-messages {
+    margin: 20px 0;
+  }
+  
+  .alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-size: 1.1em;
+    text-align: center;
+  }
+  
+  .alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+  }
+  
+  .alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .alert {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
 
 .login-container a:hover {
     color: #1f4037;
