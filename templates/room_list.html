@@ -2,8 +2,78 @@
 
 {% block head %}
 <title>Room List</title>
+<style>
+    .room-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin: 20px 0;
+    }
+
+    .room-card {
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 15px;
+        text-align: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .room-card img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+
+    .room-card h3 {
+        margin: 10px 0;
+        font-size: 18px;
+    }
+
+    .room-card p {
+        font-size: 16px;
+        margin: 5px 0;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+    }
+
+    .pagination a {
+        margin: 0 5px;
+        padding: 8px 12px;
+        text-decoration: none;
+        color: #007BFF;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    .pagination a.active {
+        background-color: #007BFF;
+        color: white;
+    }
+</style>
 {% endblock %}
 
 {% block body %}
-
+<div class="container">
+    <h1 class="text-center">Daftar Kamar</h1>
+    <div class="room-grid">
+        {% for room in rooms %}
+        <div class="room-card">
+            <img src="{{ url_for('static', filename=room['foto']) }}" alt="Foto Kamar">
+            <h3>{{ room['tipe_kamar'] }}</h3>
+            <p>ID: {{ room['id_kamar'] }}</p>
+            <p>Harga: Rp {{ room['harga_kamar'] }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="pagination">
+        {% for page in range(1, total_pages + 1) %}
+        <a href="{{ url_for('room_list', page=page) }}" class="{{ 'active' if page == current_page else '' }}">{{ page }}</a>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}
