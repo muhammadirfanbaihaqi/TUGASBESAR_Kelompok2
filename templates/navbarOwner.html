@@ -1,16 +1,29 @@
-<!-- templates/layout.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hotel Asahi</title>
-    
+    <link rel="stylesheet" href="{{ url_for('static', filename='styleNavbarOwner.css') }}">
 
     {% block head %}
     {% endblock %}
 </head>
 <body>
+    <nav class="navbar">
+        <ul>
+            <li><a href="{{ url_for('homeOwner') }}">Home</a></li>
+            <li><a href="{{ url_for('checkinOwner') }}">Checkin</a></li>
+            <li><a href="{{ url_for('checkoutOwner') }}">Checkout</a></li>
+            <li><a href="{{ url_for('booking_listOwner') }}">Daftar Booking</a></li>
+            <li><a href="{{ url_for('room_listOwner') }}">Daftar Kamar</a></li>
+            <li><a href="{{ url_for('managePetugas') }}">Resepsionis</a></li>
+            <li><a href="{{ url_for('Manage_kamar') }}">Manage Kamar</a></li>
+            <!-- manage kamar dan resepsionis adalah fitur khusus owner -->
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+    </nav>
+
     {% block body %}
     {% endblock %}
 
