@@ -1,17 +1,20 @@
-{% extends "layout.html" %}
+<!-- {% extends "layout.html" %} -->
 
 {% block head %}
 <title>Login</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='stylelogin.css') }}">
 {% endblock %}
 
 {% block body %}
-<h2>Login</h2>
+<div class="login-container">
+    <h2>Login</h2>
     <form method="POST">
-        <label>Email:</label><br>
-        <input type="email" name="email" required><br>
-        <label>Password:</label><br>
-        <input type="password" name="password" required><br>
+        <label for="id_petugas">ID Petugas</label>
+        <input type="text" name="id_petugas" placeholder="ID Petugas" required>
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Password" required>
         <input type="submit" value="Login">
     </form>
-    <a href="{{ url_for('register') }}">Don't have an account? Register here</a>
+    <!-- <a href="{{ url_for('register') }}">Don't have an account? Register here</a> -->
+</div>
 {% endblock %}
