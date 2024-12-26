@@ -134,7 +134,7 @@
                 </form>
                 {% else %}
                 <button class="btn btn-disabled">Sudah Checkout</button>
-                <button class="btn btn-primary">Cetak Struk</button>
+                <button class="btn btn-primary" onclick="window.location.href='{{ url_for('cetak_struk', booking_id=booking.id_booking) }}'">Cetak Struk</button>
                 {% endif %}
             </td>
         </tr>
