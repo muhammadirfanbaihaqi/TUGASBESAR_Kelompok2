@@ -10,15 +10,18 @@
     {% endblock %}
 </head>
 <body>
-    <nav class="navbar">
-        <ul>
-            <li><a href="{{ url_for('checkinOwner') }}">Check In</a></li>
-            <li><a href="{{ url_for('booking_listOwner') }}">Daftar Booking</a></li>
-            <li><a href="{{ url_for('room_listOwner') }}">Daftar Kamar</a></li>
-            <li><a href="{{ url_for('managePetugas') }}">Resepsionis</a></li>
-            <!-- manage kamar dan resepsionis adalah fitur khusus owner -->
-            <li><a href="{{ url_for('logout') }}">Logout</a></li>
-        </ul>
+    <nav class="wrapper">
+        <div class="brand">
+            <div class="firstname">Asahi</div>
+            <div class="lastname">Owner</div>
+        </div>
+        <ul class="navigation">
+            <li><a href="{{ url_for('checkinOwner') }}" class="{{ 'active' if request.endpoint == 'checkinOwner' else '' }}">Check In</a></li>
+            <li><a href="{{ url_for('booking_listOwner') }}" class="{{ 'active' if request.endpoint == 'booking_listOwner' else '' }}">Daftar Booking</a></li>
+            <li><a href="{{ url_for('room_listOwner') }}" class="{{ 'active' if request.endpoint == 'room_listOwner' else '' }}">Daftar Kamar</a></li>
+            <li><a href="{{ url_for('managePetugas') }}" class="{{ 'active' if request.endpoint == 'managePetugas' else '' }}">Resepsionis</a></li>
+            <li><a href="{{ url_for('logout') }}" class="{{ 'active' if request.endpoint == 'logout' else '' }}">Logout</a></li>
+        </ul>        
     </nav>
 
     {% block body %}
