@@ -71,6 +71,18 @@
 
 {% block body %}
 <h2>Daftar Booking</h2>
+<form method="GET" action="{{ url_for('booking_listOwner') }}">
+    <div>
+        <label for="nik">Cari NIK:</label>
+        <input type="text" id="nik" name="nik" placeholder="Masukkan NIK" value="{{ request.args.get('nik', '') }}">
+    </div>
+    <div>
+        <label for="tanggal">Cari Tanggal (YYYY-MM-DD):</label>
+        <input type="date" id="tanggal" name="tanggal" value="{{ request.args.get('tanggal', '') }}">
+    </div>
+    <button type="submit" class="btn btn-primary">Cari</button>
+</form>
+
 
 <!-- Flash Messages -->
 {% with messages = get_flashed_messages(with_categories=true) %}

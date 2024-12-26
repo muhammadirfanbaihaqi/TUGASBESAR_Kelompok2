@@ -124,20 +124,38 @@ def checkinOwner():
 def booking_listOwner():
     conn = mysql.connect
     cursor = conn.cursor()
-    
-    booking_list_items = []  # Pastikan variabel dideklarasikan terlebih dahulu
 
-    # Fetch all bookings
-    cursor.execute("""
+    # Inisialisasi variabel untuk menampung data pencarian
+    nik = request.args.get('nik', '').strip()
+    tanggal = request.args.get('tanggal', '').strip()
+
+    booking_list_items = []
+
+    # Query dasar
+    query = """
         SELECT 
             tr.ID_Booking, tr.NIK, tr.nama_pelanggan, tr.ID_Petugas, 
             tr.Kode_Kamar, tr.Waktu_Checkin, tr.Durasi_Hari, 
             tr.waktu_checkout, tr.HargaBayarAwal, tr.denda, tr.hargafinal 
         FROM trbooking tr
-    """)
+        WHERE 1=1
+    """
+    params = []
+
+    # Tambahkan filter berdasarkan NIK jika diisi
+    if nik:
+        query += " AND tr.NIK = %s"
+        params.append(nik)
+
+    # Tambahkan filter berdasarkan tanggal jika diisi
+    if tanggal:
+        query += " AND DATE(tr.Waktu_Checkin) = %s"
+        params.append(tanggal)
+
+    cursor.execute(query, tuple(params))
     bookings = cursor.fetchall()
 
-    # Convert tuples to dictionaries
+    # Konversi data dari database ke dalam dictionary
     booking_list_items = [
         {
             'id_booking': booking[0],
@@ -155,18 +173,18 @@ def booking_listOwner():
         for booking in bookings
     ]
 
+    # Bagian POST tetap sama seperti sebelumnya
     if request.method == 'POST':
         booking_id = request.form['booking_id']
         current_time = datetime.now()
 
-        # Fetch booking details
         cursor.execute("""
             SELECT Waktu_Checkin, Durasi_Hari, HargaBayarAwal, Kode_Kamar
             FROM trbooking 
             WHERE ID_Booking = %s
         """, (booking_id,))
         booking = cursor.fetchone()
-        
+
         if not booking:
             flash('Booking tidak ditemukan.', 'danger')
             return redirect(url_for('booking_listOwner'))
@@ -182,16 +200,13 @@ def booking_listOwner():
         )
 
         if current_time > jadwal_co_seharusnya:
-            # Late checkout
             waktu_terlewat = math.ceil((current_time - jadwal_co_seharusnya).total_seconds() / 3600)
             denda = 0.05 * harga_bayar_awal * waktu_terlewat
             harga_final = harga_bayar_awal + denda
         else:
-            # On time checkout
             denda = 0
             harga_final = harga_bayar_awal
 
-        # Update checkout details
         cursor.execute("""
             UPDATE trbooking 
             SET waktu_checkout = %s, denda = %s, hargafinal = %s 
@@ -199,7 +214,6 @@ def booking_listOwner():
         """, (current_time, denda, harga_final, booking_id))
         conn.commit()
 
-        # Update status kamar
         cursor.execute("""
             UPDATE mskamar
             SET statuskamar = 'Tersedia'
@@ -213,6 +227,7 @@ def booking_listOwner():
     cursor.close()
     conn.close()
     return render_template('booking_listOwner.html', bookings=booking_list_items)
+
 
 
 
