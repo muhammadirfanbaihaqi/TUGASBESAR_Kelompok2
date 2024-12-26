@@ -57,6 +57,7 @@ def checkinOwner():
         nik = request.form['nik']
         lantai_ke = request.form['lantai_ke']
         kategori = request.form['kategori']
+        nama_pelanggan = request.form['nama_pelanggan']
         durasi = int(request.form['durasi'])
         id_petugas = session.get('id')  # ID petugas dari session
         print(id_petugas)
@@ -99,10 +100,10 @@ def checkinOwner():
             # Insert booking data
             cursor.execute(
                 """
-                INSERT INTO trbooking (ID_Booking, NIK, ID_Petugas, Kode_Kamar, Waktu_Checkin, Durasi_Hari, HargaBayarAwal) 
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO trbooking (ID_Booking, NIK, nama_pelanggan ,ID_Petugas, Kode_Kamar, Waktu_Checkin, Durasi_Hari, HargaBayarAwal) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                     """,
-                (id_booking, nik, id_petugas, kode_kamar, waktu_checkin, durasi, harga_bayar_awal)
+                (id_booking, nik, nama_pelanggan ,id_petugas, kode_kamar, waktu_checkin, durasi, harga_bayar_awal)
             )
             conn.commit()
             flash("Booking berhasil!", "success")
@@ -127,7 +128,6 @@ def checkinOwner():
 @app.route('/booking_listOwner', methods=['GET', 'POST'])
 def booking_listOwner():
     return render_template('booking_listOwner.html')
-
 
 
 @app.route('/room_listOwner', methods=['GET'])
@@ -348,6 +348,7 @@ def checkin():
         nik = request.form['nik']
         lantai_ke = request.form['lantai_ke']
         kategori = request.form['kategori']
+        nama_pelanggan = request.form['nama_pelanggan']
         durasi = int(request.form['durasi'])
         id_petugas = session.get('id')  # ID petugas dari session
         print(id_petugas)
@@ -390,10 +391,10 @@ def checkin():
             # Insert booking data
             cursor.execute(
                 """
-                INSERT INTO trbooking (ID_Booking, NIK, ID_Petugas, Kode_Kamar, Waktu_Checkin, Durasi_Hari, HargaBayarAwal) 
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO trbooking (ID_Booking, NIK, nama_pelanggan ,ID_Petugas, Kode_Kamar, Waktu_Checkin, Durasi_Hari, HargaBayarAwal) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                     """,
-                (id_booking, nik, id_petugas, kode_kamar, waktu_checkin, durasi, harga_bayar_awal)
+                (id_booking, nik, nama_pelanggan ,id_petugas, kode_kamar, waktu_checkin, durasi, harga_bayar_awal)
             )
             conn.commit()
             flash("Booking berhasil!", "success")
@@ -409,9 +410,6 @@ def checkin():
     return render_template('checkin.html')
 
 
-# @app.route('/checkout', methods=['GET', 'POST'])
-# def checkout():
-#     return render_template('checkout.html')
 
 @app.route('/booking_list', methods=['GET', 'POST'])
 def booking_list():
