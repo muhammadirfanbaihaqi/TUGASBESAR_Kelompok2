@@ -259,8 +259,8 @@ def cetak_struk(booking_id):
         'Nama Pelanggan': booking[1],
         'ID Petugas': booking[2],
         'Kode Kamar': booking[3],
-        'Waktu Checkin': booking[4],
-        'Waktu Checkout': booking[5] if booking[5] else "Belum Checkout",
+        'Waktu Checkin': booking[4].strftime('%Y-%m-%d %H:%M:%S'),
+        'Waktu Checkout': booking[5].strftime('%Y-%m-%d %H:%M:%S') if booking[5] else "Belum Checkout",
         'Denda': f"Rp {booking[6]:,.2f}" if booking[6] else "0",
         'Harga Final': f"Rp {booking[7]:,.2f}"
     }
@@ -269,29 +269,38 @@ def cetak_struk(booking_id):
     buffer = BytesIO()
     pdf = canvas.Canvas(buffer, pagesize=letter)
     pdf.setTitle("Struk Booking")
-    
-    # Tata Letak PDF
-    pdf.setFont("Helvetica-Bold", 16)
-    pdf.drawString(200, 750, "STRUK BOOKING")
-    
+
+    # Header
+    pdf.setFont("Helvetica-Bold", 18)
+    pdf.drawCentredString(300, 750, "STRUK BOOKING")
     pdf.setFont("Helvetica", 12)
+    pdf.drawCentredString(300, 735, "Hotel XYZ - Layanan Terbaik untuk Anda")
+    pdf.line(50, 720, 550, 720)  # Garis horizontal
+
+    # Konten Struk
     y = 700
+    pdf.setFont("Helvetica", 12)
     for key, value in data.items():
-        pdf.drawString(100, y, f"{key}: {value}")
+        pdf.drawString(70, y, f"{key}:")
+        pdf.drawString(200, y, f"{value}")
         y -= 20
 
-    # Gaya footer
+    # Footer
+    pdf.line(50, 100, 550, 100)  # Garis horizontal
     pdf.setFont("Helvetica-Bold", 10)
-    pdf.drawString(100, 50, "Terima kasih telah menggunakan layanan kami!")
-    
+    pdf.drawCentredString(300, 80, "Terima kasih telah menggunakan layanan kami!")
+    pdf.drawCentredString(300, 65, "Hotel Asahi - Jalan Merdeka No. 123, Kota ABC")
+
+    # Simpan PDF
     pdf.save()
     buffer.seek(0)
-    
+
     # Kirim file PDF sebagai respons download
     response = make_response(buffer.getvalue())
     response.headers['Content-Type'] = 'application/pdf'
     response.headers['Content-Disposition'] = f'attachment; filename=Struk_Booking_{booking_id}.pdf'
     return response
+
 
 
 
