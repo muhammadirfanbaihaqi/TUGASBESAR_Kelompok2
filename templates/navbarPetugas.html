@@ -10,12 +10,16 @@
     {% endblock %}
 </head>
 <body>
-    <nav class="navbar">
-        <ul>
-            <li><a href="{{ url_for('checkin') }}">Checkin</a></li>
-            <li><a href="{{ url_for('booking_list') }}">Daftar Booking</a></li>
-            <li><a href="{{ url_for('room_list') }}">Daftar Kamar</a></li>
-            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+    <nav class="wrapper">
+        <div class="brand">
+            <div class="firstname">Asahi</div>
+            <div class="lastname">Petugas</div>
+        </div>
+        <ul class="navigation">
+            <li><a href="{{ url_for('checkin') }}" class="{{ 'active' if request.endpoint == 'checkin' else '' }}">Check In</a></li>
+            <li><a href="{{ url_for('booking_list') }}" class="{{ 'active' if request.endpoint == 'booking_list' else '' }}">Daftar Booking</a></li>
+            <li><a href="{{ url_for('room_list') }}" class="{{ 'active' if request.endpoint == 'room_list' else '' }}">Daftar Kamar</a></li>
+            <li><a href="{{ url_for('logout') }}" class="{{ 'active' if request.endpoint == 'logout' else '' }}">Logout</a></li>
         </ul>
     </nav>
 
