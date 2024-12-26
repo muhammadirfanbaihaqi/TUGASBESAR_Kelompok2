@@ -43,25 +43,14 @@ def login():
             session['name'] = user[1]
             flash('Login successful!', 'success')
             if user[3] == 'owner':
-                return redirect(url_for('homeOwner'))
+                return redirect(url_for('checkinOwner'))
             elif user[3] == 'Petugas':
-                return redirect(url_for('homePetugas'))
+                return redirect(url_for('checkin'))
         else:
             flash('Invalid id or password!', 'danger')
 
     return render_template('login.html')
 
-@app.route('/homeOwner', methods=['GET', 'POST'])
-def homeOwner():
-    return render_template('homeOwner.html')
-
-
-
-
-
-# @app.route('/checkinOwner', methods=['GET', 'POST'])
-# def checkinOwner():
-#     return render_template('checkinOwner.html')
 @app.route('/checkinOwner', methods=['GET', 'POST'])
 def checkinOwner():
     if request.method == 'POST':
@@ -130,10 +119,9 @@ def checkinOwner():
 
 
 
-
-@app.route('/checkoutOwner', methods=['GET', 'POST'])
-def checkoutOwner():
-    return render_template('checkoutOwner.html')
+# @app.route('/checkoutOwner', methods=['GET', 'POST'])
+# def checkoutOwner():
+#     return render_template('checkoutOwner.html')
 
 
 @app.route('/booking_listOwner', methods=['GET', 'POST'])
@@ -353,9 +341,6 @@ def delete_user(id):
 
 
 
-@app.route('/homePetugas', methods=['GET', 'POST'])
-def homePetugas():
-    return render_template('homePetugas.html')
 
 @app.route('/checkin', methods=['GET', 'POST'])
 def checkin():
@@ -424,9 +409,9 @@ def checkin():
     return render_template('checkin.html')
 
 
-@app.route('/checkout', methods=['GET', 'POST'])
-def checkout():
-    return render_template('checkout.html')
+# @app.route('/checkout', methods=['GET', 'POST'])
+# def checkout():
+#     return render_template('checkout.html')
 
 @app.route('/booking_list', methods=['GET', 'POST'])
 def booking_list():
