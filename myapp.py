@@ -387,31 +387,32 @@ def managePetugas():
         flash("Anda tidak memiliki akses ke halaman ini. Anda telah logout.", "danger")
         return redirect(url_for('logout'))
     if request.method == 'POST':
+        return Owner.add_petugas()
         # Get form data
-        id_petugas = random.randint(1000, 9999)
-        nama_user = request.form['nama_user']
-        password_user_hashed = request.form['password_user_hashed']
-        role = request.form['role']
+        # id_petugas = random.randint(1000, 9999)
+        # nama_user = request.form['nama_user']
+        # password_user_hashed = request.form['password_user_hashed']
+        # role = request.form['role']
 
-        # Hash the password
-        hashed_password = generate_password_hash(password_user_hashed)
+        # # Hash the password
+        # hashed_password = generate_password_hash(password_user_hashed)
 
-        # Insert new petugas into the database
-        try:
-            conn = mysql.connection
-            cur = conn.cursor()
-            cur.execute(
-                "INSERT INTO msuser (ID_Petugas, nama_user, password_user_hashed, role) VALUES (%s, %s, %s, %s)",
-                (id_petugas, nama_user, hashed_password, role)
-            )
-            conn.commit()
-            cur.close()
-            conn.close()
+        # # Insert new petugas into the database
+        # try:
+        #     conn = mysql.connection
+        #     cur = conn.cursor()
+        #     cur.execute(
+        #         "INSERT INTO msuser (ID_Petugas, nama_user, password_user_hashed, role) VALUES (%s, %s, %s, %s)",
+        #         (id_petugas, nama_user, hashed_password, role)
+        #     )
+        #     conn.commit()
+        #     cur.close()
+        #     conn.close()
 
-            flash('Petugas baru berhasil ditambahkan!', 'success')
-        except Exception as e:
-            flash(f'Terjadi kesalahan: {e}', 'danger')
-        return redirect(url_for('managePetugas'))
+        #     flash('Petugas baru berhasil ditambahkan!', 'success')
+        # except Exception as e:
+        #     flash(f'Terjadi kesalahan: {e}', 'danger')
+        # return redirect(url_for('managePetugas'))
     
     # Fetch all petugas
     try:

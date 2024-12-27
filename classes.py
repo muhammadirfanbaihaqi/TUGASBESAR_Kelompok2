@@ -345,4 +345,30 @@ class Owner:
             return response
 
         
+    @classmethod
+    def add_petugas(cls):
+        id_petugas = random.randint(1000, 9999)
+        nama_user = request.form['nama_user']
+        password_user_hashed = request.form['password_user_hashed']
+        role = request.form['role']
+
+        # Hash the password
+        hashed_password = generate_password_hash(password_user_hashed)
+
+        # Insert new petugas into the database
+        try:
+            conn = mysql.connection
+            cur = conn.cursor()
+            cur.execute(
+                "INSERT INTO msuser (ID_Petugas, nama_user, password_user_hashed, role) VALUES (%s, %s, %s, %s)",
+                (id_petugas, nama_user, hashed_password, role)
+            )
+            conn.commit()
+            cur.close()
+            conn.close()
+
+            flash('Petugas baru berhasil ditambahkan!', 'success')
+        except Exception as e:
+            flash(f'Terjadi kesalahan: {e}', 'danger')
+        return redirect(url_for('managePetugas'))
 
