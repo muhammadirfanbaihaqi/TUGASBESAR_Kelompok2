@@ -656,38 +656,40 @@ def room_list():
     if role == "owner":
         flash("Anda tidak memiliki akses ke halaman ini. Anda telah logout.", "danger")
         return redirect(url_for('logout'))
-    per_page = 9
-    page = int(request.args.get('page', 1))
+    
+    return Petugas.melihat_daftar_kamar()
+    # per_page = 9
+    # page = int(request.args.get('page', 1))
 
-    cur = mysql.connection.cursor()
+    # cur = mysql.connection.cursor()
 
-    # Hitung jumlah total kamar
-    cur.execute("SELECT COUNT(*) FROM mskamar")
-    total_rooms = cur.fetchone()[0]
+    # # Hitung jumlah total kamar
+    # cur.execute("SELECT COUNT(*) FROM mskamar")
+    # total_rooms = cur.fetchone()[0]
 
-    total_pages = math.ceil(total_rooms / per_page)
-    offset = (page - 1) * per_page
+    # total_pages = math.ceil(total_rooms / per_page)
+    # offset = (page - 1) * per_page
 
-    # Ambil data kamar dengan pagination
-    cur.execute(
-        "SELECT Kode_Kamar, foto, Kategori, harga_kamar, statuskamar FROM mskamar LIMIT %s OFFSET %s",
-        (per_page, offset)
-    )
-    rooms = cur.fetchall()
-    cur.close()
+    # # Ambil data kamar dengan pagination
+    # cur.execute(
+    #     "SELECT Kode_Kamar, foto, Kategori, harga_kamar, statuskamar FROM mskamar LIMIT %s OFFSET %s",
+    #     (per_page, offset)
+    # )
+    # rooms = cur.fetchall()
+    # cur.close()
 
-    room_list = [
-        {
-            'id_kamar': r[0],
-            'foto': 'data:image/jpeg;base64,' + base64.b64encode(r[1]).decode('utf-8'),  # Konversi byte ke base64
-            'tipe_kamar': r[2],
-            'harga_kamar': r[3],
-            'statuskamar': r[4],
-        }
-        for r in rooms
-    ]
+    # room_list = [
+    #     {
+    #         'id_kamar': r[0],
+    #         'foto': 'data:image/jpeg;base64,' + base64.b64encode(r[1]).decode('utf-8'),  # Konversi byte ke base64
+    #         'tipe_kamar': r[2],
+    #         'harga_kamar': r[3],
+    #         'statuskamar': r[4],
+    #     }
+    #     for r in rooms
+    # ]
 
-    return render_template('room_list.html', rooms=room_list, total_pages=total_pages, current_page=page)
+    # return render_template('room_list.html', rooms=room_list, total_pages=total_pages, current_page=page)
 
 
 
