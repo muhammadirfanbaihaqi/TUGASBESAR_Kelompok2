@@ -1,168 +1,125 @@
 body {
-    font-family: 'Roboto', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: linear-gradient(to right, #1f4037, #99f2c8);
-    margin: 0;
-    color: #fff;
+  font-family: 'Roboto', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-image: url('/static/hotel4.jpg'); /* Ganti dengan path gambar Anda */
+  background-size: cover; /* Agar gambar menutupi seluruh layar */
+  background-position: center; /* Agar gambar selalu di tengah */
+  margin: 0;
+  color: #fff;
 }
 
 .login-container {
-    background: rgba(0, 0, 0, 0.8);
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-    width: 300px;
-    text-align: center;
+  width: 500px;
+  padding: 20px 30px;
+  background-color: rgba(255, 255, 255, 0.9); /* Transparansi untuk efek elegan */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Tambahkan shadow */
+  animation: fadeIn 0.5s ease-in-out;
+  text-align: center;
 }
 
 .login-container h2 {
-    margin-bottom: 1.5rem;
-    font-size: 2rem;
+  margin-bottom: 20px;
+  font-size: 3rem;
+  color: crimson;
+  text-transform: uppercase;
+  font-family: 'Poppins', sans-serif; /* Font menarik untuk heading */
+  letter-spacing: 2px;
 }
 
-.login-container label {
-    display: block;
-    margin: 0.5rem 0 0.2rem;
-    text-align: left;
+form {
+  display: flex;
+  flex-direction: column;
 }
 
-.login-container input[type="text"],
-.login-container input[type="password"] {
-    width: 100%;
-    padding: 0.5rem;
-    margin-bottom: 1rem;
-    border: none;
-    border-radius: 5px;
-    background: rgba(255, 255, 255, 0.1);
-    color: black;
+label {
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  color: #333;
+  font-family: 'Poppins', sans-serif; /* Font menarik untuk label */
+  text-align: left;
 }
 
-.login-container input[type="submit"] {
-    background: #1f4037;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s;
+input[type="text"], 
+input[type="password"] {
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease-in-out;
+  background-color: rgba(255, 255, 255, 0.8); /* Warna dasar */
+  color: #333;
 }
 
-.login-container input[type="submit"]:hover {
-    background: #99f2c8;
+input[type="text"]:focus, 
+input[type="password"]:focus {
+  border-color: black; /* Border hitam saat difokuskan */
+  outline: none;
+}
+
+input[type="submit"] {
+  padding: 10px;
+  background-color: crimson;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+input[type="submit"]:hover {
+  background-color: darkred;
+}
+
+.flash-messages {
+  margin: 20px 0;
+}
+
+.alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-size: 1.1em;
+  text-align: center;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.alert-success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.alert-danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+      transform: translateY(-20px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
 }
 
 .login-container a {
-    color: #99f2c8;
-    display: block;
-    margin-top: 1rem;
-    text-decoration: none;
-    transition: color 0.3s;
-}body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f8f9fa;
-    color: #333;
-  }
-  
-  .login-container {
-    max-width: 400px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    animation: fadeIn 0.5s ease-in-out;
-  }
-  
-  h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 2em;
-    color: #007bff;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-  }
-  
-  form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  label {
-    margin-bottom: 5px;
-    font-size: 1.1em;
-  }
-  
-  input[type="text"], input[type="password"] {
-    padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1em;
-    transition: border-color 0.3s ease-in-out;
-  }
-  
-  input[type="text"]:focus, input[type="password"]:focus {
-    border-color: #007bff;
-    outline: none;
-  }
-  
-  input[type="submit"] {
-    padding: 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
-  }
-  
-  input[type="submit"]:hover {
-    background-color: #0056b3;
-  }
-  
-  .flash-messages {
-    margin: 20px 0;
-  }
-  
-  .alert {
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    font-size: 1.1em;
-    text-align: center;
-  }
-  
-  .alert-success {
-    color: #155724;
-    background-color: #d4edda;
-    border-color: #c3e6cb;
-  }
-  
-  .alert-danger {
-    color: #721c24;
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-  }
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(-20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  .alert {
-    animation: fadeIn 0.5s ease-in-out;
-  }
-  
+  color: crimson;
+  text-decoration: none;
+  margin-top: 10px;
+  transition: color 0.3s ease-in-out;
+}
 
 .login-container a:hover {
-    color: #1f4037;
+  color: darkred;
 }
