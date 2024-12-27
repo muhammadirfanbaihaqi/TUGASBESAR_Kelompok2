@@ -13,7 +13,7 @@ from reportlab.pdfgen import canvas
 from io import BytesIO
 
 # import class
-from classes import Struk, Owner
+from classes import Struk, Owner, Petugas
 
 
 app = Flask(__name__)
@@ -442,20 +442,21 @@ def managePetugas():
 
 @app.route('/delete-user/<int:id>', methods=['POST'])
 def delete_user(id):
-    id_saat_ini = session.get('id')
-    if id_saat_ini == id:
-        flash('Anda tidak dapat menghapus diri sendiri!', 'danger')
-        return redirect(url_for('managePetugas'))
-    try:
-        conn = mysql.connection
-        cur = conn.cursor()
-        cur.execute("DELETE FROM msuser WHERE ID_Petugas = %s", (id,))
-        conn.commit()
-        cur.close()
-        conn.close()
-        return '', 200
-    except Exception as e:
-        return str(e), 500
+    return Owner.delete_user(id)
+    # id_saat_ini = session.get('id')
+    # if id_saat_ini == id:
+    #     flash('Anda tidak dapat menghapus diri sendiri!', 'danger')
+    #     return redirect(url_for('managePetugas'))
+    # try:
+    #     conn = mysql.connection
+    #     cur = conn.cursor()
+    #     cur.execute("DELETE FROM msuser WHERE ID_Petugas = %s", (id,))
+    #     conn.commit()
+    #     cur.close()
+    #     conn.close()
+    #     return '', 200
+    # except Exception as e:
+    #     return str(e), 500
 
 
 
@@ -477,55 +478,57 @@ def checkin():
         waktu_checkin = datetime.now()
         id_booking = random.randint(1000, 9999)
 
-        try:
-            conn = mysql.connect
-            cursor = conn.cursor()
-            # Select kamar sesuai kriteria
-            cursor.execute(
-                """
-                SELECT * FROM mskamar 
-                WHERE lantai_ke = %s AND kategori = %s AND statuskamar = 'Tersedia'
-                LIMIT 1
-                """,
-                (lantai_ke, kategori)
-            )
-            kamar = cursor.fetchone()
+        Petugas.checkin(nik, lantai_ke, kategori, nama_pelanggan, durasi, id_petugas, waktu_checkin, id_booking)
 
-            if not kamar:
-                flash("Tidak ada kamar yang tersedia sesuai kriteria.", "danger")
-                return redirect(url_for('checkin'))
+        # try:
+        #     conn = mysql.connect
+        #     cursor = conn.cursor()
+        #     # Select kamar sesuai kriteria
+        #     cursor.execute(
+        #         """
+        #         SELECT * FROM mskamar 
+        #         WHERE lantai_ke = %s AND kategori = %s AND statuskamar = 'Tersedia'
+        #         LIMIT 1
+        #         """,
+        #         (lantai_ke, kategori)
+        #     )
+        #     kamar = cursor.fetchone()
 
-            kode_kamar = kamar[0]
-            harga_kamar = kamar[2]
-            harga_bayar_awal = durasi * harga_kamar
+        #     if not kamar:
+        #         flash("Tidak ada kamar yang tersedia sesuai kriteria.", "danger")
+        #         return redirect(url_for('checkin'))
 
-            # Update status kamar
-            cursor.execute(
-                """
-                UPDATE mskamar 
-                SET statuskamar = 'Dibooking' 
-                WHERE Kode_Kamar = %s
-                """,
-                (kode_kamar,)
-            )
-            conn.commit()
+        #     kode_kamar = kamar[0]
+        #     harga_kamar = kamar[2]
+        #     harga_bayar_awal = durasi * harga_kamar
 
-            # Insert booking data
-            cursor.execute(
-                """
-                INSERT INTO trbooking (ID_Booking, NIK, nama_pelanggan ,ID_Petugas, Kode_Kamar, Waktu_Checkin, Durasi_Hari, HargaBayarAwal) 
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-                    """,
-                (id_booking, nik, nama_pelanggan ,id_petugas, kode_kamar, waktu_checkin, durasi, harga_bayar_awal)
-            )
-            conn.commit()
-            flash("Booking berhasil!", "success")
+        #     # Update status kamar
+        #     cursor.execute(
+        #         """
+        #         UPDATE mskamar 
+        #         SET statuskamar = 'Dibooking' 
+        #         WHERE Kode_Kamar = %s
+        #         """,
+        #         (kode_kamar,)
+        #     )
+        #     conn.commit()
 
-        except Exception as e:
-            conn.rollback()
-            flash(f"Terjadi kesalahan: {str(e)}", "danger")
-        finally:
-            conn.close()
+        #     # Insert booking data
+        #     cursor.execute(
+        #         """
+        #         INSERT INTO trbooking (ID_Booking, NIK, nama_pelanggan ,ID_Petugas, Kode_Kamar, Waktu_Checkin, Durasi_Hari, HargaBayarAwal) 
+        #         VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        #             """,
+        #         (id_booking, nik, nama_pelanggan ,id_petugas, kode_kamar, waktu_checkin, durasi, harga_bayar_awal)
+        #     )
+        #     conn.commit()
+        #     flash("Booking berhasil!", "success")
+
+        # except Exception as e:
+        #     conn.rollback()
+        #     flash(f"Terjadi kesalahan: {str(e)}", "danger")
+        # finally:
+        #     conn.close()
 
         return redirect(url_for('checkin'))
 
