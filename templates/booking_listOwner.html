@@ -3,34 +3,82 @@
 {% block head %}
 <title>Booking List</title>
 <style>
-    table {
-        width: 80%;
-        border-collapse: collapse;
-        margin: 20px 0;
-        font-size: 16px;
-        text-align: left;
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        margin: 20px auto;
+        padding: 20px;
+        max-width: 1700px;
+        text-align: center; /* Tambahkan ini untuk memastikan konten berada di tengah */
     }
-    table th, table td {
-        border: 1px solid #ddd;
-        padding: 8px;
+    .cari-container {
+        display: flex;
+        align-items: center; /* Sejajarkan elemen secara vertikal */
+        justify-content: center; /* Perbaiki agar elemen berada di tengah */
+        gap: 20px; /* Beri jarak antar elemen */
+        margin: 20px 0; /* Jarak vertikal dari elemen lain */
     }
-    table th {
-        background-color: #f2f2f2;
+    .cari-container div {
+        display: flex;
+        flex-direction: column; /* Label dan input ditumpuk secara vertikal */
+        align-items: center; /* Pastikan label dan input berada di tengah */
+    }
+    .cari-container label {
         font-weight: bold;
+        margin-bottom: 5px; /* Jarak kecil antara label dan input */
     }
+    .cari-container input {
+        padding: 8px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 4px; /* Sudut input sedikit melengkung */
+        width: 200px; /* Ukuran input */
+    }
+    .cari-container .btn {
+        padding: 10px 20px;
+        background-color: crimson;
+        color: white;
+        border: none;
+        border-radius: 4px; /* Sudut tombol melengkung */
+        cursor: pointer;
+        width: 80px;
+    }
+    .cari-container .btn:hover {
+        background-color: darkred; /* Warna lebih gelap saat hover */
+    }
+
     .btn {
         padding: 5px 10px;
         margin: 5px;
         border: none;
         cursor: pointer;
+        border-radius: 5px;
     }
-    .btn-primary { background-color: #4CAF50; color: white; }
-    .btn-disabled { background-color: #ccc; color: white; cursor: not-allowed; }
+    .btn-primary {
+        background-color: crimson;
+        color: white;
+        align-items: center;
+        justify-content: center;
+    }
+    .btn-check {
+        background-color: crimson;
+        color: white;
+    }
+    .btn-check:hover {
+        background-color: darkred;
+    }
 
+    .btn-disabled {
+        background-color: #ccc;
+        color: white;
+        cursor: not-allowed;
+    }
     .flash-messages {
         margin: 20px 0;
+        text-align: center; /* Pusatkan teks pesan flash */
     }
-
     .alert {
         padding: 15px;
         margin-bottom: 20px;
@@ -38,20 +86,18 @@
         border-radius: 4px;
         font-size: 1.1em;
         text-align: center;
+        animation: fadeIn 0.5s ease-in-out;
     }
-
     .alert-success {
         color: #155724;
         background-color: #d4edda;
         border-color: #c3e6cb;
     }
-
     .alert-danger {
         color: #721c24;
         background-color: #f8d7da;
         border-color: #f5c6cb;
     }
-
     @keyframes fadeIn {
         from {
             opacity: 0;
@@ -62,83 +108,124 @@
             transform: translateY(0);
         }
     }
+    .judul {
+        padding: 20px;
+        font-size: 30px;
+        font-weight: bold;
+    }
+    .content-table {
+        border-collapse: collapse;
+        margin: 20px auto;
+        font-size: 0.9em;
+        min-width: 400px;
+        max-width: 1240px;
+        border-radius: 5px 5px 0 0;
+        overflow: hidden;
+        box-shadow: 0 0  20px rgba(0, 0, 0, 0.15);
+        width: auto;
+        text-align: center; /* Pastikan tabel berada di tengah */
+    }
 
-    .alert {
-        animation: fadeIn 0.5s ease-in-out;
+    .content-table thead tr {
+        background-color: crimson;
+        color: white;
+        text-align: center;
+        font-weight: 200;
+    }
+
+    .content-table th, .content-table td {
+        padding: 12px 15px;
+        text-align: center;
+    }
+    .content-table tbody tr {
+        border-bottom: 1px solid #dddddd;
+        transition: color 0.3s ease;
+    }
+    .container-table tbody tr:nth-of-type(even) {
+        background-color: #f3f3f3;
+    }
+    .content-table tbody tr:last-child {
+        border-bottom: 2px solid crimson;
+    }
+    .content-table tbody tr:hover {
+        color: crimson; /* Mengubah warna teks menjadi crimson saat hover */
     }
 </style>
 {% endblock %}
 
 {% block body %}
-<h2>Daftar Booking</h2>
-<form method="GET" action="{{ url_for('booking_listOwner') }}">
-    <div>
-        <label for="nik">Cari NIK:</label>
-        <input type="text" id="nik" name="nik" placeholder="Masukkan NIK" value="{{ request.args.get('nik', '') }}">
-    </div>
-    <div>
-        <label for="tanggal">Cari Tanggal (YYYY-MM-DD):</label>
-        <input type="date" id="tanggal" name="tanggal" value="{{ request.args.get('tanggal', '') }}">
-    </div>
-    <button type="submit" class="btn btn-primary">Cari</button>
-</form>
+<div class="container">
+    <h2 class="judul">Daftar Booking</h2>
+    <form method="GET" action="{{ url_for('booking_listOwner') }}">
+        <div class="cari-container">
+            <div>
+                <label for="nik">Cari Berdasarkan NIK</label>
+                <input type="text" id="nik" name="nik" placeholder="Masukkan NIK" value="{{ request.args.get('nik', '') }}">
+            </div>
+            <div>
+                <label for="tanggal">Cari Berdasarkan Tanggal</label>
+                <input type="date" id="tanggal" name="tanggal" value="{{ request.args.get('tanggal', '') }}">
+            </div>
+            <button type="submit" class="btn btn-primary">Cari</button>
+        </div>
+    </form>
 
-
-<!-- Flash Messages -->
-{% with messages = get_flashed_messages(with_categories=true) %}
-{% if messages %}
-  <div class="flash-messages">
-    {% for category, message in messages %}
-      <div class="alert alert-{{ category }}">
-        {{ message }}
-      </div>
-    {% endfor %}
-  </div>
-{% endif %}
-{% endwith %}
-
-<table>
-    <thead>
-        <tr>
-            <th>ID Booking</th>
-            <th>NIK</th>
-            <th>Nama Pelanggan</th>
-            <th>ID Petugas</th>
-            <th>Kode Kamar</th>
-            <th>Waktu Checkin</th>
-            <th>Durasi (Hari)</th>
-            <th>Waktu Checkout</th>
-            <th>Denda</th>
-            <th>Harga Final</th>
-            <th>Aksi</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for booking in bookings %}
-        <tr>
-            <td>{{ booking.id_booking }}</td>
-            <td>{{ booking.nik }}</td>
-            <td>{{ booking.nama_pelanggan }}</td>
-            <td>{{ booking.id_petugas }}</td>
-            <td>{{ booking.kode_kamar }}</td>
-            <td>{{ booking.waktu_checkin }}</td>
-            <td>{{ booking.durasi_hari }}</td>
-            <td>{{ booking.waktu_checkout if booking.waktu_checkout else "Belum Checkout" }}</td>
-            <td>{{ booking.denda if booking.denda is not none else "-" }}</td>
-            <td>{{ booking.harga_final if booking.harga_final is not none else "-" }}</td>
-            <td>
-                {% if not booking.waktu_checkout %}
-                <form method="POST">
-                    <input type="hidden" name="booking_id" value="{{ booking.id_booking }}">
-                    <button type="submit" class="btn btn-primary">Checkout</button>
-                </form>
-                {% else %}
-                <button class="btn btn-disabled">Sudah Checkout</button>
-                <button class="btn btn-primary" onclick="window.location.href='{{ url_for('cetak_struk', booking_id=booking.id_booking) }}'">Cetak Struk</button>
-                {% endif %}
-            </td>
-        </tr>
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-messages">
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message }}
+        </div>
         {% endfor %}
-    </tbody>
-</table>
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <table class="content-table">
+        <thead>
+            <tr>
+                <th>ID Booking</th>
+                <th>NIK</th>
+                <th>Nama Pelanggan</th>
+                <th>ID Petugas</th>
+                <th>Kode Kamar</th>
+                <th>Waktu Checkin</th>
+                <th>Durasi (Hari)</th>
+                <th>Waktu Checkout</th>
+                <th>Denda</th>
+                <th>Harga Final</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for booking in bookings %}
+            <tr>
+                <td>{{ booking.id_booking }}</td>
+                <td>{{ booking.nik }}</td>
+                <td>{{ booking.nama_pelanggan }}</td>
+                <td>{{ booking.id_petugas }}</td>
+                <td>{{ booking.kode_kamar }}</td>
+                <td>{{ booking.waktu_checkin }}</td>
+                <td>{{ booking.durasi_hari }}</td>
+                <td>{{ booking.waktu_checkout if booking.waktu_checkout else "Belum Checkout" }}</td>
+                <td>{{ booking.denda if booking.denda is not none else "-" }}</td>
+                <td>{{ booking.harga_final if booking.harga_final is not none else "-" }}</td>
+                <td>
+                    {% if not booking.waktu_checkout %}
+                    <form method="POST">
+                        <input type="hidden" name="booking_id" value="{{ booking.id_booking }}">
+                        <button type="submit" class="btn btn-check">Checkout</button>
+                    </form>
+                    {% else %}
+                    <button class="btn btn-disabled">Sudah Checkout</button>
+                    <button class="btn btn-primary" onclick="window.location.href='{{ url_for('cetak_struk', booking_id=booking.id_booking) }}'">Cetak Struk</button>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
