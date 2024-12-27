@@ -545,104 +545,111 @@ def booking_list():
     conn = mysql.connect
     cursor = conn.cursor()
 
-    # Inisialisasi variabel untuk menampung data pencarian
-    nik = request.args.get('nik', '').strip()
-    tanggal = request.args.get('tanggal', '').strip()
-
     booking_list_items = []
+    booking_list_items = Petugas.lihatBooking(cursor)
 
-    # Query dasar
-    query = """
-        SELECT 
-            tr.ID_Booking, tr.NIK, tr.nama_pelanggan, tr.ID_Petugas, 
-            tr.Kode_Kamar, tr.Waktu_Checkin, tr.Durasi_Hari, 
-            tr.waktu_checkout, tr.HargaBayarAwal, tr.denda, tr.hargafinal 
-        FROM trbooking tr
-        WHERE 1=1
-    """
-    params = []
+    # Inisialisasi variabel untuk menampung data pencarian
+    # nik = request.args.get('nik', '').strip()
+    # tanggal = request.args.get('tanggal', '').strip()
 
-    # Tambahkan filter berdasarkan NIK jika diisi
-    if nik:
-        query += " AND tr.NIK = %s"
-        params.append(nik)
+    # booking_list_items = []
 
-    # Tambahkan filter berdasarkan tanggal jika diisi
-    if tanggal:
-        query += " AND DATE(tr.Waktu_Checkin) = %s"
-        params.append(tanggal)
+    # # Query dasar
+    # query = """
+    #     SELECT 
+    #         tr.ID_Booking, tr.NIK, tr.nama_pelanggan, tr.ID_Petugas, 
+    #         tr.Kode_Kamar, tr.Waktu_Checkin, tr.Durasi_Hari, 
+    #         tr.waktu_checkout, tr.HargaBayarAwal, tr.denda, tr.hargafinal 
+    #     FROM trbooking tr
+    #     WHERE 1=1
+    # """
+    # params = []
 
-    cursor.execute(query, tuple(params))
-    bookings = cursor.fetchall()
+    # # Tambahkan filter berdasarkan NIK jika diisi
+    # if nik:
+    #     query += " AND tr.NIK = %s"
+    #     params.append(nik)
 
-    # Konversi data dari database ke dalam dictionary
-    booking_list_items = [
-        {
-            'id_booking': booking[0],
-            'nik': booking[1],
-            'nama_pelanggan': booking[2],
-            'id_petugas': booking[3],
-            'kode_kamar': booking[4],
-            'waktu_checkin': booking[5],
-            'durasi_hari': booking[6],
-            'waktu_checkout': booking[7],
-            'harga_bayar_awal': booking[8],
-            'denda': booking[9],
-            'harga_final': booking[10],
-        }
-        for booking in bookings
-    ]
+    # # Tambahkan filter berdasarkan tanggal jika diisi
+    # if tanggal:
+    #     query += " AND DATE(tr.Waktu_Checkin) = %s"
+    #     params.append(tanggal)
+
+    # cursor.execute(query, tuple(params))
+    # bookings = cursor.fetchall()
+
+    # # Konversi data dari database ke dalam dictionary
+    # booking_list_items = [
+    #     {
+    #         'id_booking': booking[0],
+    #         'nik': booking[1],
+    #         'nama_pelanggan': booking[2],
+    #         'id_petugas': booking[3],
+    #         'kode_kamar': booking[4],
+    #         'waktu_checkin': booking[5],
+    #         'durasi_hari': booking[6],
+    #         'waktu_checkout': booking[7],
+    #         'harga_bayar_awal': booking[8],
+    #         'denda': booking[9],
+    #         'harga_final': booking[10],
+    #     }
+    #     for booking in bookings
+    # ]
 
     # Bagian POST tetap sama seperti sebelumnya
     if request.method == 'POST':
-        booking_id = request.form['booking_id']
-        current_time = datetime.now()
+        Petugas.checkout(conn, cursor)
 
-        cursor.execute("""
-            SELECT Waktu_Checkin, Durasi_Hari, HargaBayarAwal, Kode_Kamar
-            FROM trbooking 
-            WHERE ID_Booking = %s
-        """, (booking_id,))
-        booking = cursor.fetchone()
+        
+        booking_list_items = Petugas.lihatBooking(cursor)
+        # booking_id = request.form['booking_id']
+        # current_time = datetime.now()
 
-        if not booking:
-            flash('Booking tidak ditemukan.', 'danger')
-            return redirect(url_for('booking_list'))
+        # cursor.execute("""
+        #     SELECT Waktu_Checkin, Durasi_Hari, HargaBayarAwal, Kode_Kamar
+        #     FROM trbooking 
+        #     WHERE ID_Booking = %s
+        # """, (booking_id,))
+        # booking = cursor.fetchone()
 
-        waktu_checkin = booking[0]
-        durasi_hari = booking[1]
-        harga_bayar_awal = booking[2]
-        kode_kamar = booking[3]
+        # if not booking:
+        #     flash('Booking tidak ditemukan.', 'danger')
+        #     return redirect(url_for('booking_list'))
 
-        # Calculate Jadwal_CO_Seharusnya
-        jadwal_co_seharusnya = (waktu_checkin + timedelta(days=durasi_hari)).replace(
-            hour=12, minute=0, second=0, microsecond=0
-        )
+        # waktu_checkin = booking[0]
+        # durasi_hari = booking[1]
+        # harga_bayar_awal = booking[2]
+        # kode_kamar = booking[3]
 
-        if current_time > jadwal_co_seharusnya:
-            waktu_terlewat = math.ceil((current_time - jadwal_co_seharusnya).total_seconds() / 3600)
-            denda = 0.05 * harga_bayar_awal * waktu_terlewat
-            harga_final = harga_bayar_awal + denda
-        else:
-            denda = 0
-            harga_final = harga_bayar_awal
+        # # Calculate Jadwal_CO_Seharusnya
+        # jadwal_co_seharusnya = (waktu_checkin + timedelta(days=durasi_hari)).replace(
+        #     hour=12, minute=0, second=0, microsecond=0
+        # )
 
-        cursor.execute("""
-            UPDATE trbooking 
-            SET waktu_checkout = %s, denda = %s, hargafinal = %s 
-            WHERE ID_Booking = %s
-        """, (current_time, denda, harga_final, booking_id))
-        conn.commit()
+        # if current_time > jadwal_co_seharusnya:
+        #     waktu_terlewat = math.ceil((current_time - jadwal_co_seharusnya).total_seconds() / 3600)
+        #     denda = 0.05 * harga_bayar_awal * waktu_terlewat
+        #     harga_final = harga_bayar_awal + denda
+        # else:
+        #     denda = 0
+        #     harga_final = harga_bayar_awal
 
-        cursor.execute("""
-            UPDATE mskamar
-            SET statuskamar = 'Tersedia'
-            WHERE Kode_Kamar = %s
-        """, (kode_kamar,))
-        conn.commit()
+        # cursor.execute("""
+        #     UPDATE trbooking 
+        #     SET waktu_checkout = %s, denda = %s, hargafinal = %s 
+        #     WHERE ID_Booking = %s
+        # """, (current_time, denda, harga_final, booking_id))
+        # conn.commit()
 
-        flash('Checkout berhasil!', 'success')
-        return redirect(url_for('booking_list'))
+        # cursor.execute("""
+        #     UPDATE mskamar
+        #     SET statuskamar = 'Tersedia'
+        #     WHERE Kode_Kamar = %s
+        # """, (kode_kamar,))
+        # conn.commit()
+
+        # flash('Checkout berhasil!', 'success')
+        # return redirect(url_for('booking_list'))
 
     cursor.close()
     conn.close()
