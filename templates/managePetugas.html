@@ -184,7 +184,7 @@
     <div id="user-list">
       {% for user in users %}
       <div class="user-item" id="user-{{ user.ID_Petugas }}">
-        <h4>{{ user.nama_user }} ({{ user.role }})</h4>
+        <h4>{{ user.nama_user }} ({{ user.role }}) || ID: {{ user.ID_Petugas }}</h4>
         <button class="btn btn-danger" onclick="deleteUser({{ user.ID_Petugas }})">Hapus</button>
       </div>
       {% endfor %}

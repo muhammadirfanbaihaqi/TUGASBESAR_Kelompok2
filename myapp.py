@@ -47,6 +47,7 @@ def login():
             session['loggedin'] = True 
             session['id'] = user[0]
             session['name'] = user[1]
+            session['role'] = user[3]
             flash('Login successful!', 'success')
             if user[3] == 'owner':
                 return redirect(url_for('checkinOwner'))
@@ -59,6 +60,11 @@ def login():
 
 @app.route('/checkinOwner', methods=['GET', 'POST'])
 def checkinOwner():
+    role = session.get('role')
+    if role == "Petugas":
+        flash("Anda tidak memiliki akses ke halaman ini. Anda telah logout.", "danger")
+        return redirect(url_for('logout'))
+
     if request.method == 'POST':
         nik = request.form['nik']
         lantai_ke = request.form['lantai_ke']
@@ -127,6 +133,11 @@ def checkinOwner():
 
 @app.route('/booking_listOwner', methods=['GET', 'POST'])
 def booking_listOwner():
+    role = session.get('role')
+    if role == "Petugas":
+        flash("Anda tidak memiliki akses ke halaman ini. Anda telah logout.", "danger")
+        return redirect(url_for('logout'))
+    
     conn = mysql.connect
     cursor = conn.cursor()
 
@@ -249,6 +260,10 @@ def cetak_struk(booking_id):
 
 @app.route('/room_listOwner', methods=['GET'])
 def room_listOwner():
+    role = session.get('role')
+    if role == "Petugas":
+        flash("Anda tidak memiliki akses ke halaman ini. Anda telah logout.", "danger")
+        return redirect(url_for('logout'))
     per_page = 9
     page = int(request.args.get('page', 1))
 
@@ -349,6 +364,10 @@ def add_room():
 
 @app.route('/managePetugas', methods=['GET', 'POST'])
 def managePetugas():
+    role = session.get('role')
+    if role == "Petugas":
+        flash("Anda tidak memiliki akses ke halaman ini. Anda telah logout.", "danger")
+        return redirect(url_for('logout'))
     if request.method == 'POST':
         # Get form data
         id_petugas = random.randint(1000, 9999)
@@ -420,6 +439,10 @@ def delete_user(id):
 
 @app.route('/checkin', methods=['GET', 'POST'])
 def checkin():
+    role = session.get('role')
+    if role == "owner":
+        flash("Anda tidak memiliki akses ke halaman ini. Anda telah logout.", "danger")
+        return redirect(url_for('logout'))
     if request.method == 'POST':
         nik = request.form['nik']
         lantai_ke = request.form['lantai_ke']
@@ -489,6 +512,10 @@ def checkin():
 
 @app.route('/booking_list', methods=['GET', 'POST'])
 def booking_list():
+    role = session.get('role')
+    if role == "owner":
+        flash("Anda tidak memiliki akses ke halaman ini. Anda telah logout.", "danger")
+        return redirect(url_for('logout'))
     conn = mysql.connect
     cursor = conn.cursor()
 
@@ -599,6 +626,10 @@ def booking_list():
 
 @app.route('/room_list', methods=['GET'])
 def room_list():
+    role = session.get('role')
+    if role == "owner":
+        flash("Anda tidak memiliki akses ke halaman ini. Anda telah logout.", "danger")
+        return redirect(url_for('logout'))
     per_page = 9
     page = int(request.args.get('page', 1))
 
@@ -640,6 +671,7 @@ def logout():
     session.pop('loggedin', None)
     session.pop('id', None)
     session.pop('name', None)
+    session.pop('role', None)
     #The None argument ensures that no error is raised if the key doesn't exist. 
     flash('You have been logged out.', 'success')
     return redirect(url_for('home'))

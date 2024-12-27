@@ -1,4 +1,3 @@
-
 {% block head %}
 <title>Hotel Asahi</title>
 <style>
@@ -88,6 +87,31 @@
     .login-button:hover {
       background-color: #0056b3;
     }
+
+    /* Flash Message Styles */
+    .flash-message {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 15px;
+      font-size: 16px;
+      border-radius: 5px;
+      text-align: center;
+      z-index: 1000;
+    }
+
+    .flash-success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .flash-danger {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
 </style>
 {% endblock %}
 
@@ -116,6 +140,19 @@
   <p>Silahkan Login Terlebih Dahulu</p>
   <a href="{{ url_for('login') }}" class="login-button">Login</a>
 </div>
+
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+        <div class="flash-message flash-{{ category }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
 
 <script>
     let currentIndex = 0;
