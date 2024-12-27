@@ -474,7 +474,7 @@ def checkin():
 
             if not kamar:
                 flash("Tidak ada kamar yang tersedia sesuai kriteria.", "danger")
-                return redirect(url_for('checkinOwner'))
+                return redirect(url_for('checkin'))
 
             kode_kamar = kamar[0]
             harga_kamar = kamar[2]
