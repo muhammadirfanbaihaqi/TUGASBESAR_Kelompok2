@@ -423,6 +423,10 @@ def managePetugas():
 
 @app.route('/delete-user/<int:id>', methods=['POST'])
 def delete_user(id):
+    id_saat_ini = session.get('id')
+    if id_saat_ini == id:
+        flash('Anda tidak dapat menghapus diri sendiri!', 'danger')
+        return redirect(url_for('managePetugas'))
     try:
         conn = mysql.connection
         cur = conn.cursor()
