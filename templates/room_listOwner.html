@@ -111,6 +111,24 @@
     .add-room-form button:hover {
         background-color: #218838;
     }
+
+    .room-list { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+    .pagination { text-align: center; margin: 20px 0; }
+    .pagination a, .pagination span {
+        margin: 0 5px;
+        padding: 10px 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        text-decoration: none;
+        color: crimson;
+        background-color: #fff;
+    }
+    .pagination a:hover { background-color: crimson; color: #fff; }
+    .pagination .current {
+        background-color: crimson;
+        color: #fff;
+        pointer-events: none;
+    }
 </style>
 {% endblock %}
 
@@ -126,6 +144,25 @@
         <button onclick="deleteRoom({{ room.id_kamar }})">Hapus Kamar</button>
     </div>
     {% endfor %}
+</div>
+
+<!-- Pagination -->
+<div class="pagination">
+    {% if current_page > 1 %}
+    <a href="{{ url_for('room_listOwner', page=current_page-1) }}">&#171; Previous</a>
+    {% endif %}
+
+    {% for page in range(1, total_pages + 1) %}
+    {% if page == current_page %}
+    <span class="current">{{ page }}</span>
+    {% else %}
+    <a href="{{ url_for('room_listOwner', page=page) }}">{{ page }}</a>
+    {% endif %}
+    {% endfor %}
+
+    {% if current_page < total_pages %}
+    <a href="{{ url_for('room_listOwner', page=current_page+1) }}">Next &#187;</a>
+    {% endif %}
 </div>
 
 <div class="add-room">
