@@ -127,6 +127,12 @@
     transition: background-color 0.3s ease-in-out;
   }
 
+  .btn-danger:disabled {
+        background-color: #6c757d; /* Warna abu-abu untuk tombol disabled */
+        color: #e9ecef;
+        cursor: not-allowed; /* Tanda panah berubah menjadi larangan */
+    }
+
   .btn-danger:hover {
     background-color: #cc0000;
   }
@@ -182,14 +188,19 @@
   <div class="user-list">
     <h2>Daftar Petugas</h2>
     <div id="user-list">
-      {% for user in users %}
-      <div class="user-item" id="user-{{ user.ID_Petugas }}">
-        <h4>{{ user.nama_user }} ({{ user.role }}) || ID: {{ user.ID_Petugas }}</h4>
-        <button class="btn btn-danger" onclick="deleteUser({{ user.ID_Petugas }})">Hapus</button>
-      </div>
-      {% endfor %}
+        {% for user in users %}
+        <div class="user-item" id="user-{{ user.ID_Petugas }}">
+            <h4>{{ user.nama_user }} ({{ user.role }}) || ID: {{ user.ID_Petugas }}</h4>
+            <button class="btn btn-danger" 
+                onclick="deleteUser({{ user.ID_Petugas }})" 
+                {% if user.ID_Petugas == id_saatini %} disabled {% endif %}>
+                Hapus
+            </button>
+        </div>
+        {% endfor %}
     </div>
-  </div>
+</div>
+
 </div>
 
 <script>

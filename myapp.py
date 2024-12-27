@@ -418,7 +418,7 @@ def managePetugas():
         flash(f'Terjadi kesalahan: {e}', 'danger')
         users = []
 
-    return render_template('managePetugas.html', users=users)
+    return render_template('managePetugas.html', users=users, id_saatini=session.get('id'))
 
 
 @app.route('/delete-user/<int:id>', methods=['POST'])
